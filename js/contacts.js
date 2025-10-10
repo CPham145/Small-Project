@@ -458,13 +458,11 @@ async function contactPage(userId, contactId, button) {
 			button.textContent = "Edit Contact";
 			inlineDiv.append(button);
 
-			const deleteButton = document.createElement("button");
-			deleteButton.textContent = "Delete Contact";
-			deleteButton.classList.add("buttons");
+			const deleteButton = document.getElementById("deleteContact");
 			deleteButton.addEventListener("click", () => {
-    			deleteContact(contact.ID);
+   			 handleDeleteClick(contact.ID);
 			});
-			inlineDiv.append(deleteButton);
+
 
 
 
@@ -505,6 +503,7 @@ async function deleteContact(contactId) {
 	}
 }
 */
+	/*
 function handleDeleteClick(contactId) {
   const confirmed = confirm("Delete this contact?");
   if (confirmed) {
@@ -533,6 +532,39 @@ async function deleteContact(contactId) {
   } catch (err) {
     alert(`Network error: ${err.message}`);
   }
+}
+*/
+	function handleDeleteClick(contactId) {
+    const confirmed = confirm("Are you sure you want to delete this contact?");
+    if (confirmed) {
+        deleteContact(contactId);
+    } else {
+        alert("Deletion cancelled.");
+    }
+}
+
+async function deleteContact(contactId) {
+    const data = { ID: contactId }; // matches DeleteContact.php expected input
+    console.log(`Deleting contact ID: ${contactId}`);
+
+    try {
+        const response = await fetch("../LAMPAPI/DeleteContact.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        if (result.error) {
+            alert("Error: " + result.error);
+        } else {
+            alert("Contact deleted successfully!");
+            window.location.reload(); // refresh to show updated list
+        }
+    } catch (err) {
+        console.error(err);
+        alert("An error occurred while deleting the contact.");
+    }
 }
 
 
