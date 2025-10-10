@@ -500,13 +500,16 @@ async function deleteContact(contactId) {
 	}
 }
 */
-async function deleteContact(contactId) {
-  if (!contactId) return;
-  if (!confirm("Delete this contact?")) return;
+function handleDeleteClick(contactId) {
+  const confirmed = confirm("Delete this contact?");
+  if (confirmed) {
+    deleteContact(contactId);
+  }
+}
 
-  const resEl = document.getElementById("contactSearchResult");
+async function deleteContact(contactId) {
   const data = { contactId: Number(contactId), userId };
-  
+
   try {
     const response = await fetch(`${urlBase}/DeleteContacts.${extension}`, {
       method: "POST",
@@ -515,18 +518,20 @@ async function deleteContact(contactId) {
     });
 
     const result = await response.json();
-
-    if (response.ok && !result.error) {
-      resEl.innerHTML = "Contact deleted successfully!";
-      resetFormState();
+    if (!result.error) {
+      document.getElementById("contactSearchResult").innerHTML =
+        "Contact deleted successfully!";
       loadContacts();
     } else {
-      resEl.innerHTML = `Delete failed: ${result.error || response.statusText}`;
+      document.getElementById("contactSearchResult").innerHTML =
+        `Delete failed: ${result.error}`;
     }
   } catch (err) {
-    resEl.innerHTML = `Network error: ${err.message}`;
+    document.getElementById("contactSearchResult").innerHTML =
+      `Network error: ${err.message}`;
   }
 }
+
 
 async function updateContact(userId, contact, button) {
 	const main = document.getElementById("main");
