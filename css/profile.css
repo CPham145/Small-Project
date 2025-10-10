@@ -1,0 +1,53 @@
+body
+{
+	margin: 0;
+}
+
+#container
+{
+	display: flex;
+	height: 100vh;
+}
+
+#sidebar
+{
+	width: 30%;
+	background-color: #707070;
+	/*overflow-y: auto;*/
+	overflow: scroll;
+	padding: 1em;
+	color: FFF;
+}
+
+#main
+{
+	flex: 1;
+	background-color: #b2b2b2;
+	padding: 1em;
+	overflow: hidden;
+	color: 000;
+}
+
+#inline
+{
+	display: flex;
+	align-items: flex-start;
+	gap: 10em;
+}
+
+.sidebarHeader
+{
+	width: 25%;
+	flex: none;
+	order: 1;
+}
+
+#searchBar
+{
+	margin-top: 5%;
+}
+
+#names
+{
+	list-style-type: none;
+}
