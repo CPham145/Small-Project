@@ -518,17 +518,15 @@ async function deleteContact(contactId) {
     });
 
     const result = await response.json();
+
     if (!result.error) {
-      document.getElementById("contactSearchResult").innerHTML =
-        "Contact deleted successfully!";
+      alert("Contact deleted successfully!");
       loadContacts();
     } else {
-      document.getElementById("contactSearchResult").innerHTML =
-        `Delete failed: ${result.error}`;
+      alert(`Delete failed: ${result.error}`);
     }
   } catch (err) {
-    document.getElementById("contactSearchResult").innerHTML =
-      `Network error: ${err.message}`;
+    alert(`Network error: ${err.message}`);
   }
 }
 
