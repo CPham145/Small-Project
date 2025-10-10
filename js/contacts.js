@@ -713,9 +713,15 @@ async function contactPage(userId, contactId, button) {
 
 			const deleteButton = document.getElementById("deleteContact");
 			deleteButton.addEventListener("click", () => {
-				console.log("delete pressed");
-				deleteContact(contactId);
+  				console.log("delete pressed");
+
+  				if (confirm("Delete this contact?")) {
+    				deleteContact(contactId);
+  				} else {
+    				console.log("User canceled deletion");
+  				}
 			});
+
 
 			button.addEventListener("click", () => {
 				console.log("edit in cPage pressed");
