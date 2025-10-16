@@ -16,14 +16,14 @@ else
 {
     if ($isIdSearch)
     {
-        // ✅ Exact match by contact ID
+        
         $stmt = $conn->prepare("SELECT ID, FirstName, LastName, Email, Phone 
                                 FROM Contacts WHERE ID=? AND UserID=?");
         $stmt->bind_param("ii", $inData["ID"], $userId);
     }
     else
     {
-        // ✅ Partial search by text
+        
         $search = isset($inData["Search"]) ? "%" . $inData["Search"] . "%" : "%%";
         $stmt = $conn->prepare("SELECT ID, FirstName, LastName, Email, Phone 
                                 FROM Contacts 
