@@ -1,3 +1,7 @@
+/*
+ * Responsible for Account creation and if the user wants to return to login page
+ * Employs Signup.php to save user information to db or return error if invalid info processed
+ */
 document.addEventListener("DOMContentLoaded", () => {
 	document.getElementById("signupForm").addEventListener("submit", async (e) => {
 		e.preventDefault();
@@ -17,9 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			});
 
 		      	const result = await response.json();
-		      	if (result.error) {
-				document.getElementById("message").textContent = result.error;
-			}
+		      	if (result.error) document.getElementById("message").textContent = result.error;
 			else {
 				sessionStorage.setItem("signupSuccess", "true");
 				window.location.href = "/";
@@ -34,4 +36,3 @@ document.addEventListener("DOMContentLoaded", () => {
 		window.location.href = "/";
 	});
 });
-

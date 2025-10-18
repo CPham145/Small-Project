@@ -66,6 +66,7 @@ body {
 	border-radius: 12px;
 	margin-bottom: 0.5rem;
 	max-width: 200px;
+	transition: background 0.2s ease;
 }
 
 .buttons:hover {
@@ -173,4 +174,5 @@ body {
 	box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
 	text-align: center;
 	color: #000;
+	gap: 1rem;	
 }

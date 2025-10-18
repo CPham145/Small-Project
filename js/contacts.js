@@ -1,3 +1,7 @@
+/*
+ * Responsible for loading user information as well as their contacts
+ * Also responsible for handling user interaction with contacts, search bar, logout, and adding contacts
+ */
 document.addEventListener("DOMContentLoaded", () => {
 	profilePage();
 	grabAllContacts();
@@ -34,10 +38,14 @@ document.addEventListener("DOMContentLoaded", () => {
 	});
 });
 
+/*
+ * Responsible for loading the users information on main and tracking the myProfile session storage
+ * Accepts no input and provides no output
+ */
 function profilePage() {
 	const firstName = sessionStorage.getItem("firstName");
 	const lastName = sessionStorage.getItem("lastName");
-	sessionStorage.setItem("myProfile", false);
+	sessionStorage.setItem("myProfile", false); // Tracks whether My Profile button should appear or not
 
 	const main = document.getElementById("main");
 	main.innerHTML = `<div class="inline">
@@ -47,6 +55,11 @@ function profilePage() {
 			<h2>${firstName} ${lastName}</h2>`;
 }
 
+/*
+ * Responsible for retrieving all users contacts to display on sidebar
+ * Accepts no input and provides no output
+ * Employs SearchContact.php to retrieve information
+ */
 async function grabAllContacts() {
 	const userId = sessionStorage.getItem("userId");
 
@@ -112,6 +125,11 @@ async function grabAllContacts() {
 	}
 }
 
+/*
+ * Responsible for reformatting main and sidebar to display add contact page
+ * Accepts the addContact button as input so it can edit it to Save Contact
+ * Also moves the button onto main
+ */
 function addNewContact(button) {
 	const newTitle = document.createElement("h1");
 	newTitle.id = "title";
@@ -171,6 +189,11 @@ function addNewContact(button) {
 	console.log(cancelButton);
 }
 
+/*
+ * Responsible for saving contact information after save contact button is pressed
+ * Accepts no input and provides no output
+ * Employs the AddContact.php to save input information to contacts db or display an error to user
+ */
 async function saveContact() {
 	const data = {
 		FirstName: document.getElementById("firstName").value,
@@ -208,6 +231,11 @@ async function saveContact() {
 	}
 }
 
+/*
+ * Responsible for displaying up to 10 contacts related to search query
+ * Accepts a query string that is input into the search bar and returns nothing
+ * Employs the SearchContact.php and follows similar methods to grabAllContacts() in order to display contacts
+ */
 async function searchContacts(query) {
 	const userId = sessionStorage.getItem("userId");
 	const data = {
@@ -265,8 +293,6 @@ async function searchContacts(query) {
 				li.classList.add("contactItem");
 				li.dataset.id = contact.ID;
 				ul.append(li);
-
-
 			});
 
 			wrapper.append(letterHeader, ul);
@@ -278,6 +304,12 @@ async function searchContacts(query) {
 	}
 }
 
+/*
+ * Responsible for reformatting main to display a contacts information after theyve been clicked on
+ * Employs SearchContact.php to get contact information
+ * Responsible for creating and listening to delete as well as edit contacts events
+ * Accepts userId, the contactsId, and the addContact button as input. Returns no output
+ */
 async function contactPage(userId, contactId, createButton) {
 	const span = document.getElementById("sideSpan");
 	if(!createButton.parentNode !== span.parentNode) span.insertAdjacentElement('afterend', createButton);
@@ -296,9 +328,7 @@ async function contactPage(userId, contactId, createButton) {
 		});
 
 		const result = await response.json();
-		if(result.error) {
-			console.log(result);
-		}
+		if(result.error) console.log(result);
 		else {
 			if(sessionStorage.getItem("myProfile") === "false") {
 				sessionStorage.setItem("myProfile", true);
@@ -331,8 +361,10 @@ async function contactPage(userId, contactId, createButton) {
 					<div id="delModal" class="modal">
 						<div class="modalContent">
 							<p>Are you sure you want to delete this contact?</p>
-							<button type=button class="buttons" id="confirmDel">Confirm</button>
-							<button type=button class="buttons" id="cancelDel">Cancel</button>
+							<div>
+								<button type=button class="buttons" id="confirmDel">Confirm</button>
+								<button type=button class="buttons" id="cancelDel">Cancel</button>
+							</div>
 						</div>
 					</div>
 					<h3>Phone Number: ${displayPhone(contact.Phone)}</h3>
@@ -359,7 +391,7 @@ async function contactPage(userId, contactId, createButton) {
 			const updateButton = document.getElementById("updateContact");
 			updateButton.addEventListener("click", () => {
 				console.log("edit in cPage pressed");
-				updateContact(userId, contact, updateButton);
+				updateContact(userId, contact);
 			});
 		}
 	}
@@ -368,6 +400,11 @@ async function contactPage(userId, contactId, createButton) {
 	}
 }
 
+/*
+ * Phone numbers in db are stored as only digits
+ * Responsible for reformatting returned phonenumbers from the db into more readable phonenumbers
+ * Accepts the unformatted raw phonenumber and returns the reformatted phonenumber
+ */
 function displayPhone(phone) {
 	const area = phone.slice(0, 3);
 	const prefix = phone.slice(3, 6);
@@ -375,6 +412,11 @@ function displayPhone(phone) {
 	return `(${area})${prefix}-${line}`;
 }
 
+/*
+ * Responsible for removing contact from contacts db
+ * Employs DeleteContact.php in order to remove from db
+ * Accepts contactId as input and returns no output
+ */
 async function deleteContact(contactId) {
 	const data = { ID: contactId };
 	console.log(`Contact Id is: ${contactId}`);
@@ -387,9 +429,7 @@ async function deleteContact(contactId) {
 		});
 
 		const result = await response.json();
-		if(result.error) {
-			console.log(result);
-		}
+		if(result.error) console.log(result);
 		else {
 			console.log(result);
 			window.location.reload();
@@ -400,7 +440,12 @@ async function deleteContact(contactId) {
 	}
 }
 
-async function updateContact(userId, contact, button) {
+/*
+ * Responsible for editing/updating contact information as well as displaying any related errors to user
+ * Employs the UpdateContact.php to do this
+ * Accepts userId and contact object (stores all contact information) as input. Returns no output
+ */
+async function updateContact(userId, contact) {
 	const main = document.getElementById("main");
 
 	main.innerHTML = `<div class="inline">
@@ -435,9 +480,7 @@ async function updateContact(userId, contact, button) {
 
 		const result = await response.json();
 		
-		if(result.error) {
-			console.log(result);
-		}
+		if(result.error) console.log(result);
 		else {
 			console.log(result);
 			grabAllContacts();
@@ -452,10 +495,11 @@ async function updateContact(userId, contact, button) {
 
 }
 
+/*
+ * Responsible for clearing session storage and returning user to home page
+ * Accepts no input, and returns no output
+ */
 function doLogout() {
-	userId = 0;
-	firstName = "";
-	lastName = "";
-	document.cookie = "firstName = ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
-	window.location.href = "index.html";
+	sessionStorage.clear();
+	window.location.href = "/";
 }
