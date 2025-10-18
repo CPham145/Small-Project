@@ -18,7 +18,7 @@
 
     // Phone: must contain only digits (optional: allow +, -, spaces)
     if (!preg_match("/^[0-9]{10}$/", $phone)) {
-        returnWithError("Phone number must contain only digits.");
+        returnWithError("Phone number must contain only digits and be 10 digits long.");
         exit();
     }
 

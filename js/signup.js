@@ -26,8 +26,12 @@ document.addEventListener("DOMContentLoaded", () => {
 			}
 		}
 		catch (err) {
-			document.getElementById("msg").textContent = "EROR FROM JS";
+			document.getElementById("msg").textContent = "ERROR FROM JS";
 		}
+	});
+
+	document.getElementById("goBack").addEventListener("click", () => { 
+		window.location.href = "/";
 	});
 });
 
